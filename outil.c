@@ -76,8 +76,8 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 void supprimer_un_contact_dans_rep(Repertoire* rep, int indice) {
 
 	// compléter code ici pour tableau
-	if (rep->nb_elts >= 1)		/* s'il y a au moins un element dans le tableau */
-	{						/* et que l'indice pointe à l'interieur */
+	if (rep->nb_elts >= 1)		/* s'il y a au moins un élèment dans le tableau */
+	{						/* et que l'indice pointe à l'intérieur */
 		for (int i = indice; i < rep->nb_elts - 1; i++) {   //on décale tout le tableau sur la gauche à partir de l'indice jusque nb_elts-1
 			rep->tab[i] = rep->tab[i + 1];
 		}
@@ -129,7 +129,7 @@ void affichage_enreg(Enregistrement enr)
 void affichage_enreg_frmt(Enregistrement enr)
 {
 	// code à compléter ici
-	// comme fonction affichage_enreg, mais avec présentation alignées des infos
+	// comme fonction affichage_enreg, mais avec présentation alignée des infos
 
 	printf("| %s", enr.nom);
 	for (int i = strlen(enr.nom); i < MAX_NOM; i++)
@@ -151,7 +151,7 @@ bool est_sup(Enregistrement enr1, Enregistrement enr2)
 {
 	// code à compléter ici
 	// code à compléter ici
-	char tmp1[MAX_NOM];                                             //on copie les noms et les prenoms dans des variables temporaires et on les passe en majuscules
+	char tmp1[MAX_NOM];                                             //on copie les noms et les prénoms dans des variables temporaires et on les passe en majuscules
 	strncpy_s(tmp1, _countof(tmp1), enr2.nom, _TRUNCATE);
 	_strupr_s(tmp1, strlen(tmp1) + 1);
 	char tmp2[MAX_NOM];
@@ -166,9 +166,9 @@ bool est_sup(Enregistrement enr1, Enregistrement enr2)
 
 
 	if (strcmp((tmp1), (tmp2)) < 0) return (true);   //si tmp1 est plus haut dans l'ordre alphabétique on return true
-	if (strcmp((tmp1), (tmp2)) > 0) return (false);  //sinon on vérifie si elle est plus haute si c'est le cas on return false
+	if (strcmp((tmp1), (tmp2)) > 0) return (false);  //sinon on vérifie si la variable tmp1 est plus haute et si c'est le cas on return false
 
-	if (strcmp((tmp3), (tmp4)) < 0) return (true);   //on refait pareil qu'avant avec les prénoms si jamais les noms sont les mêmes
+	if (strcmp((tmp3), (tmp4)) < 0) return (true);   //on refait pareil qu'avant avec les prénoms si jamais les noms sont identiques
 	if (strcmp((tmp3), (tmp4)) > 0) return (false);
 
 	return(false);
@@ -233,13 +233,13 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 #ifdef IMPL_TAB
 	// ajouter code ici pour tableau
 	ind_fin = rep->nb_elts;
-	strncpy_s(tmp_nom, _countof(tmp_nom), nom, _TRUNCATE);    //on copie nom dans tmp_nom, et on le passe en majuscule
+	strncpy_s(tmp_nom, _countof(tmp_nom), nom, _TRUNCATE);    //on copie nom dans tmp_nom, et on le passe en majuscules
 	_strupr_s(tmp_nom, strlen(tmp_nom) + 1);
-	while (trouve == false && i < ind_fin) {  //on va comparer a chaque nom du répertoire jusqu'au dernier
+	while (trouve == false && i < ind_fin) {  //on va comparer à chaque nom du répertoire jusqu'au dernier
 
-		strncpy_s(tmp_nom2, _countof(tmp_nom2), rep->tab[i].nom, _TRUNCATE);   //on copie dans tmp_nom2 le nom du répertoire et on le passe en maj
+		strncpy_s(tmp_nom2, _countof(tmp_nom2), rep->tab[i].nom, _TRUNCATE);   //on copie dans tmp_nom2 le nom du répertoire et on le passe en majuscules
 		_strupr_s(tmp_nom2, strlen(tmp_nom2) + 1);
-		if (strcmp(tmp_nom, tmp_nom2) == 0) trouve = true; //comparaison de la chaine de charactere on return true si c'est le même
+		if (strcmp(tmp_nom, tmp_nom2) == 0) trouve = true; //comparaison de la chaine de caractères on return true si c'est le même
 		else i++;  //sinon on passe au suivant
 	}
 #else
@@ -292,7 +292,7 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 		return err;
 	}
 	for (int i = 0; i < rep->nb_elts; i++) {      //pour tous les éléments du tableau
-		fprintf(fic_rep, "%s%c", rep->tab[i].nom, SEPARATEUR);           //on écrit dans le fichier les info du contact
+		fprintf(fic_rep, "%s%c", rep->tab[i].nom, SEPARATEUR);           //on écrit dans le fichier les infos du contact
 		fprintf(fic_rep, "%s%c", rep->tab[i].prenom, SEPARATEUR);
 		fprintf(fic_rep, "%s\n", rep->tab[i].tel);
 
@@ -338,7 +338,7 @@ int charger(Repertoire *rep, char nom_fichier[])
 		{
 			if (fgets(buffer, long_max_rec, fic_rep) != NULL)
 			{
-				/* memorisation de l'enregistrement lu dans le tableau */
+				/* mémorisation de l'enregistrement lu dans le tableau */
 				buffer[long_max_rec] = 0;			/* en principe il y a deja un fin_de_chaine, cf fgets */
 
 				if ((char_nw_line = strchr(buffer, '\n')) != NULL)
@@ -348,12 +348,12 @@ int charger(Repertoire *rep, char nom_fichier[])
 #ifdef IMPL_TAB
 				if (lire_champ_suivant(buffer, &idx, rep->tab[num_rec].nom, MAX_NOM, SEPARATEUR) == OK)
 				{
-					idx++;							/* on saute le separateur */
+					idx++;							/* on saute le séparateur */
 					if (lire_champ_suivant(buffer, &idx, rep->tab[num_rec].prenom, MAX_NOM, SEPARATEUR) == OK)
 					{
 						idx++;
 						if (lire_champ_suivant(buffer, &idx, rep->tab[num_rec].tel, MAX_TEL, SEPARATEUR) == OK)
-							num_rec++;		/* element à priori correct, on le comptabilise */
+							num_rec++;		/* élément a priori correct, on le comptabilise */
 					}
 				}
 #else
