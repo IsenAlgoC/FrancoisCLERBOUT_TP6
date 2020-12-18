@@ -51,6 +51,12 @@ int ajouter_un_contact_dans_rep(Repertoire *rep, Enregistrement enr)
 
 	}
 	else {
+		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) {
+			rep->nb_elts++;     //on ajoute l'élement en queue
+			modif = true;
+			rep->est_trie = false;
+			return(OK);
+		}
 			//
 			// compléter code ici pour Liste
 			//
@@ -197,7 +203,7 @@ void trier(Repertoire *rep)
 	}
 }
 
-
+	 
 	
 #else
 #ifdef IMPL_LIST
@@ -245,6 +251,16 @@ int rechercher_nom(Repertoire *rep, char nom[], int ind)
 #else
 #ifdef IMPL_LIST
 							// ajouter code ici pour Liste
+	ind_fin = rep->nb_elts;
+	strncpy_s(tmp_nom, _countof(tmp_nom), nom, _TRUNCATE);    //on copie nom dans tmp_nom, et on le passe en majuscule
+	_strupr_s(tmp_nom, strlen(tmp_nom) + 1);
+	while (trouve == false && i < ind_fin) {  //on va comparer a chaque nom du répertoire jusqu'au dernier
+
+		strncpy_s(tmp_nom2, _countof(tmp_nom2), GetElementAt(rep->liste, i)->pers.nom, _TRUNCATE);   //on copie dans tmp_nom2 le nom du répertoire et on le passe en majuscules
+		_strupr_s(tmp_nom2, strlen(tmp_nom2) + 1);
+		if (strcmp(tmp_nom, tmp_nom2) == 0) trouve = true; //comparaison de la chaine de caractere on return true si c'est le même
+		else i++;  //sinon on passe au suivant
+	}
 	
 #endif
 #endif
@@ -303,6 +319,19 @@ int sauvegarder(Repertoire *rep, char nom_fichier[])
 #else
 #ifdef IMPL_LIST
 	// ajouter code ici pour Liste
+	if (fopen_s(&fic_rep, nom_fichier, "w") != 0 || fic_rep == NULL) {   //on vérifie que le fichier est bien ouvert
+		err = ERROR;
+		return err;
+	}
+	for (int i = 0; i < rep->nb_elts; i++) {      //pour tous les éléments du tableau
+		fprintf(fic_rep, "%s%c", GetElementAt(rep->liste, i)->pers.nom, SEPARATEUR);           //on écrit dans le fichier les infos du contact
+		fprintf(fic_rep, "%s%c", GetElementAt(rep->liste, i)->pers.prenom, SEPARATEUR);
+		fprintf(fic_rep, "%s\n", GetElementAt(rep->liste, i)->pers.tel);
+
+	}
+	if (feof(fic_rep)) {
+		fclose(fic_rep);
+	}
 #endif
 #endif
 
@@ -359,6 +388,21 @@ int charger(Repertoire *rep, char nom_fichier[])
 #else
 #ifdef IMPL_LIST
 														// ajouter code implemention liste
+				Enregistrement nouvel;
+				if (lire_champ_suivant(buffer, &idx, enr.nom, MAX_NOM, SEPARATEUR) == OK)
+				{
+					idx++;							/* on saute le separateur */
+					if (lire_champ_suivant(buffer, &idx, enr.prenom, MAX_NOM, SEPARATEUR) == OK)
+					{
+						idx++;
+						if (lire_champ_suivant(buffer, &idx, enr.tel, MAX_TEL, SEPARATEUR) == OK) {
+
+							InsertElementAt(rep->liste, num_rec, enr);
+							num_rec++;		/* element a priori correct, on le comptabilise */
+						}
+
+					}
+				}
 #endif
 #endif
 
